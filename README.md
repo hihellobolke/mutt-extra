@@ -103,7 +103,7 @@ All the applied patches are in *mutt-patched* directory:
 
 ```
 
-cd $(mktemp -d /var/folders/rv/cp3ydg4s42d3850z5y4ys5cm0000gp/T//mutt-extra.XXXXX) && bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
+cd $(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX) &&     bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
 
 ```
 
