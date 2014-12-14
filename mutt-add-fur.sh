@@ -138,7 +138,7 @@ $(sed -n '/.\/configure/,/[^\]$/p' $MUTT_PKGBUILD)
 
 \`\`\`
 
-cd \$(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX) && bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
+cd \$(mktemp -d \${TMPDIR:-/tmp}/mutt-extra.XXXXX) && bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
 
 \`\`\`
 
