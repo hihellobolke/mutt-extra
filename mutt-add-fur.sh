@@ -32,7 +32,7 @@ set -e
 MYTMP=$(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX)
 trap 'rm -rf $MYTMPDIR' EXIT
 
-WGET=$(which wget)
+WGET="$(which wget) --no-check-certificate"
 
 MUTT_PKGBUILD_URL=https://aur.archlinux.org/packages/mu/mutt-patched/PKGBUILD
 MUTT_VER=$(wget -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
@@ -96,12 +96,12 @@ $(sed -n '/.\/configure/,/[^\]$/p' $MUTT_PKGBUILD)
 
 ##### Hax!?
 -------------------------------
-  * Download [mutt-add-fur.sh](mutt-add-fur.sh)
+  * Download [mutt-add-fur.sh](https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
   * Run it from empty directory
 
 \`\`\`
 
-cd \$(mktemp -d) && bash <(curl -s http://url/to/mutt-add-fur.sh)
+cd \$(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX) && bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
 
 \`\`\`
 
