@@ -10,7 +10,7 @@ red(){ echo -e "${COL_RED}$@${COL_RESET}";}
 green(){ echo -e "${COL_GREEN}$@${COL_RESET}";}
 yellow(){ echo -e "${COL_YELLOW}$@${COL_RESET}";}
 
-sayerror(){ red "\nError: $@" 1>&2;}
+sayerror(){ red "\nError: $@" 1>&2; exit 1;}
 saywarn(){ yellow "\nWarn: $@";}
 sayinfo(){ green "\nInfo: $@";}
 sayline(){ yellow "\n-------------------------------------------------------------\n";}
@@ -27,17 +27,30 @@ else
     sayinfo "Using $(pwd) for downloading & patching mutt.... "
 fi
 
-set -e
-
 MYTMP=$(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX)
-trap 'rm -rf $MYTMPDIR' EXIT
+
+function cleanUp() {
+    if [[ -d "$MYTMP" ]]
+    then
+        rm -r "$MYTMP"
+    fi
+}
+
+function errored() {
+    cleanUp
+    sayerror "Errored so exiting..."
+}
+
+set -e
+trap errored EXIT
 
 WGET="$(which wget) --no-check-certificate"
 
 MUTT_PKGBUILD_URL=https://aur.archlinux.org/packages/mu/mutt-patched/PKGBUILD
-MUTT_VER=$(wget -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
+MUTT_VER=$($WGET -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
 MUTT_URL=https://bitbucket.org/mutt/mutt/downloads/mutt-${MUTT_VER}.tar.gz
 MUTT_SRCDIR=$(pwd)
+MUTT_DIR=$(basename $MUTT_URL | sed 's/\.[a-z].*//g')
 MUTT_PATCH_URL=https://aur.archlinux.org/packages/mu/mutt-patched/mutt-patched.tar.gz
 MUTT_PATCH_DIR=${MUTT_SRCDIR}/$(basename $MUTT_PATCH_URL | sed 's/\.[a-z].*//g')
 MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
@@ -46,23 +59,47 @@ MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
 sayinfo "Using tmpdir at $MYTMP"
 ls -ld $MYTMP
 
+
 sayinfo "Downloading mutt..."
-(cd $MYTMP && $WGET $MUTT_URL)
+(cd $MYTMP && {
+        [ -e $(basename ${MUTT_URL}) ] || $WGET $MUTT_URL
+    }
+)
+
 
 sayinfo "Extracting ..."
-tar -zxvf $MYTMP/$(basename $MUTT_URL) && (cd $(basename $MUTT_URL | sed 's/\.[a-z].*//g')/ && mv * ${MUTT_SRCDIR}/) && rmdir $(basename $MUTT_URL | sed 's/\.[a-z].*//g')
+(
+    [ -d ./$MUTT_DIR ] && rm -rf ./$MUTT_DIR
+    tar -zxvf $MYTMP/$(basename $MUTT_URL)
+)|| sayerror "extraction failed miserably... perhaps"
+
 
 sayinfo "Download patches from archlinux...."
-(cd $MYTMP && $WGET $MUTT_PATCH_URL)
+(cd $MYTMP && {
+        [ -e $(basename $MUTT_PATCH_URL) ] || $WGET $MUTT_PATCH_URL
+    }
+) || sayerror "couldnt download patches"
+
 
 sayinfo "extracting packages..."
-tar -zxvf $MYTMP/$(basename $MUTT_PATCH_URL)
+tar -zxvf $MYTMP/$(basename $MUTT_PATCH_URL) || sayerror "Couldnt extract patches"
+
 
 sayinfo "Download archlinux's pkgbuild file"
-(cd $MYTMP && $WGET $MUTT_PKGBUILD_URL)
+(cd $MYTMP && {
+        [ -e $(basename $MUTT_PKGBUILD_URL) ] || $WGET $MUTT_PKGBUILD_URL
+    }
+) || sayerror "Downloading pkgbuild file failed"
 
 sayinfo "Apply patches according to pkgbuild"
-sed -n "/patch/s/\${srcdir}/$(basename ${MUTT_PATCH_DIR})/gp" $MUTT_PKGBUILD | xargs -I{} bash -c {}
+(
+    cd $MUTT_DIR && \
+    sed -n "/patch/s/\${srcdir}/..\/$(basename ${MUTT_PATCH_DIR})/gp" $MUTT_PKGBUILD | xargs -I{} bash -c {} && \
+    cp -R ./* $MUTT_SRCDIR/ && \
+    rm -rf ./* && cd .. && rmdir $MUTT_DIR
+) || sayerror "Patching failed"
+
+#exit 1
 
 sayinfo "Generating README.md"
 cat >README.md <<EMDAER
@@ -118,4 +155,6 @@ God help's those who help themeselves...
 EMDAER
 
 sayinfo "Deleting tmp stuff"
+trap - EXIT
 (cd $MYTMP && rm -rf ./*) && rmdir $MYTMP
+exit 0

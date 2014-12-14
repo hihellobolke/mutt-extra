@@ -98,12 +98,12 @@ All the applied patches are in *mutt-patched* directory:
 
 ##### Hax!?
 -------------------------------
-  * Download [mutt-add-fur.sh](mutt-add-fur.sh)
+  * Download [mutt-add-fur.sh](https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
   * Run it from empty directory
 
 ```
 
-cd $(mktemp -d) && bash <(curl -s http://url/to/mutt-add-fur.sh)
+cd $(mktemp -d /var/folders/rv/cp3ydg4s42d3850z5y4ys5cm0000gp/T//mutt-extra.XXXXX) && bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
 
 ```
 
