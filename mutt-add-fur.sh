@@ -27,6 +27,7 @@ else
     sayinfo "Using $(pwd) for downloading & patching mutt.... "
 fi
 
+MUTT_TEST=${MUTT_TEST:-NO}
 MYTMP=$(mktemp -d ${TMPDIR:-/tmp}/mutt-extra.XXXXX)
 
 function cleanUp() {
@@ -46,23 +47,37 @@ trap errored EXIT
 
 WGET="$(which wget) --no-check-certificate"
 
-MUTT_PKGBUILD_URL=https://aur.archlinux.org/packages/mu/mutt-patched/PKGBUILD
-MUTT_VER=$($WGET -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
-MUTT_URL=https://bitbucket.org/mutt/mutt/downloads/mutt-${MUTT_VER}.tar.gz
-MUTT_SRCDIR=$(pwd)
-MUTT_DIR=$(basename $MUTT_URL | sed 's/\.[a-z].*//g')
-MUTT_PATCH_URL=https://aur.archlinux.org/packages/mu/mutt-patched/mutt-patched.tar.gz
-MUTT_EXTRA_PATCH_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-extra-patches.tar.gz
-MUTT_PATCH_DIR=${MUTT_SRCDIR}/$(basename $MUTT_PATCH_URL | sed 's/\.[a-z].*//g')
-MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
+if [[ "${MUTT_TEST}" == "NO" ]]; then
+    MUTT_PKGBUILD_URL=https://aur.archlinux.org/packages/mu/mutt-patched/PKGBUILD
+    MUTT_VER=$($WGET -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
+    MUTT_URL=https://bitbucket.org/mutt/mutt/downloads/mutt-${MUTT_VER}.tar.gz
+    MUTT_SRCDIR=$(pwd)
+    MUTT_DIR=$(basename "$MUTT_URL" | sed 's/\.[a-z].*//g')
+    MUTT_PATCH_URL=https://aur.archlinux.org/packages/mu/mutt-patched/mutt-patched.tar.gz
+    MUTT_EXTRA_PATCH_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-extra-patches.tar.gz
+    MUTT_EXTRA_FUR_SCRIPT_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh
+    MUTT_PATCH_DIR=${MUTT_SRCDIR}/$(basename $MUTT_PATCH_URL | sed 's/\.[a-z].*//g')
+    MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
+else
+    MUTT_PKGBUILD_URL=http://localhost/mutt-extra-stuff/PKGBUILD
+    MUTT_VER=$($WGET -qO- $MUTT_PKGBUILD_URL | sed -n '/pkgver=/s/.*=//pg')
+    MUTT_URL=http://localhost/mutt-extra-stuff/mutt-${MUTT_VER}.tar.gz
+    MUTT_SRCDIR=$(pwd)
+    MUTT_DIR=$(basename "$MUTT_URL" | sed 's/\.[a-z].*//g')
+    MUTT_PATCH_URL=http://localhost/mutt-extra-stuff/mutt-patched.tar.gz
+    MUTT_EXTRA_PATCH_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-extra-patches.tar.gz
+    MUTT_EXTRA_FUR_SCRIPT_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh
+    MUTT_PATCH_DIR=${MUTT_SRCDIR}/$(basename $MUTT_PATCH_URL | sed 's/\.[a-z].*//g')
+    MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
+fi
 
 
 sayinfo "Using tmpdir at $MYTMP"
-ls -ld $MYTMP
+ls -ld "$MYTMP"
 
 
 sayinfo "Downloading mutt..."
-(cd $MYTMP && {
+(cd "$MYTMP" && {
         [ -e $(basename ${MUTT_URL}) ] || $WGET $MUTT_URL
     }
 )
@@ -103,12 +118,13 @@ sayinfo "Apply patches according to pkgbuild"
 
 sayinfo "Applying extra patches for mac os x"
 (
-    cd $MUTT_SRCDIR/ && ($WGET $MUTT_EXTRA_PATCH_URL && tar -zxvf $(basename $MUTT_EXTRA_PATCH_URL) && \
+    cd $MUTT_SRCDIR/ && ($WGET $MUTT_EXTRA_PATCH_URL && tar -zxvf $(basename $MUTT_EXTRA_PATCH_URL)) && \
     (
         for i in $(\ls $(basename $MUTT_EXTRA_PATCH_URL | sed 's/\.[a-z].*//g')/*.patch); do
-	    patch -Np1 -i $i
+	       patch -Np1 -i "$i"
         done
     )
+    cd $MUTT_SRCDIR/ && ($WGET $MUTT_EXTRA_FUR_SCRIPT_URL)
 )
 
 #exit 1
@@ -150,8 +166,8 @@ $(sed -n '/.\/configure/,/[^\]$/p' $MUTT_PKGBUILD)
 
 \`\`\`
 
-cd \$(mktemp -d \${TMPDIR:-/tmp}/mutt-extra.XXXXX) && \
-    bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
+  cd \$(mktemp -d \${TMPDIR:-/tmp}/mutt-extra.XXXXX) && \
+  bash <(curl -sk https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-add-fur.sh)
 
 \`\`\`
 
