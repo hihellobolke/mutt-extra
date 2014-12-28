@@ -52,6 +52,7 @@ MUTT_URL=https://bitbucket.org/mutt/mutt/downloads/mutt-${MUTT_VER}.tar.gz
 MUTT_SRCDIR=$(pwd)
 MUTT_DIR=$(basename $MUTT_URL | sed 's/\.[a-z].*//g')
 MUTT_PATCH_URL=https://aur.archlinux.org/packages/mu/mutt-patched/mutt-patched.tar.gz
+MUTT_EXTRA_PATCH_URL=https://raw.githubusercontent.com/hihellobolke/mutt-extra/master/mutt-extra-patches.tar.gz
 MUTT_PATCH_DIR=${MUTT_SRCDIR}/$(basename $MUTT_PATCH_URL | sed 's/\.[a-z].*//g')
 MUTT_PKGBUILD=${MYTMP}/$(basename $MUTT_PKGBUILD_URL)
 
@@ -99,6 +100,16 @@ sayinfo "Apply patches according to pkgbuild"
     cp -R ./* $MUTT_SRCDIR/ && \
     rm -rf ./* && cd .. && rmdir $MUTT_DIR
 ) || sayerror "Patching failed"
+
+sayinfo "Applying extra patches for mac os x"
+(
+    cd $MUTT_SRCDIR/ && ($WGET $MUTT_EXTRA_PATCH_URL && tar -zxvf $(basename $MUTT_EXTRA_PATCH_URL) && \
+    (
+        for i in $(\ls $(basename $MUTT_EXTRA_PATCH_URL | sed 's/\.[a-z].*//g')/*.patch); do
+	    patch -Np1 -i $i
+        done
+    )
+)
 
 #exit 1
 

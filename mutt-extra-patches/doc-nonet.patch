@@ -1,0 +1,32 @@
+diff -rupN a/doc/Makefile.am b/doc/Makefile.am
+--- a/doc/Makefile.am	2014-12-28 21:28:46.000000000 +0530
++++ b/doc/Makefile.am	2014-12-28 21:30:47.000000000 +0530
+@@ -118,10 +118,10 @@ stamp-doc-rc: $(top_srcdir)/init.h maked
+ 	touch stamp-doc-rc
+ 
+ manual.html: $(srcdir)/html.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+-	xsltproc --nonet -o $@ $(srcdir)/html.xsl manual.xml
++	xsltproc -o $@ $(srcdir)/html.xsl manual.xml
+ 
+ stamp-doc-chunked: $(srcdir)/chunk.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+-	xsltproc --nonet $(srcdir)/chunk.xsl manual.xml
++	xsltproc $(srcdir)/chunk.xsl manual.xml
+ 	touch stamp-doc-chunked
+ 
+ $(CHUNKED_DOCFILES): stamp-doc-chunked
+diff -rupN a/doc/Makefile.in b/doc/Makefile.in
+--- a/doc/Makefile.in	2014-12-28 21:28:46.000000000 +0530
++++ b/doc/Makefile.in	2014-12-28 21:31:22.000000000 +0530
+@@ -685,10 +685,10 @@ stamp-doc-rc: $(top_srcdir)/init.h maked
+ 	touch stamp-doc-rc
+ 
+ manual.html: $(srcdir)/html.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+-	xsltproc --nonet -o $@ $(srcdir)/html.xsl manual.xml
++	xsltproc -o $@ $(srcdir)/html.xsl manual.xml
+ 
+ stamp-doc-chunked: $(srcdir)/chunk.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+-	xsltproc --nonet $(srcdir)/chunk.xsl manual.xml
++	xsltproc $(srcdir)/chunk.xsl manual.xml
+ 	touch stamp-doc-chunked
+ 
+ $(CHUNKED_DOCFILES): stamp-doc-chunked
