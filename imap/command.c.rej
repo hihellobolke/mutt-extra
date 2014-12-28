@@ -1,0 +1,22 @@
+***************
+*** 1012,1017 ****
+  	     opened */
+  	  status->uidnext = oldun;
+  
+          FREE (&value);
+          return;
+        }
+--- 1012,1024 ----
+  	     opened */
+  	  status->uidnext = oldun;
+  
++         /* Added to make the sidebar show the correct numbers */
++         if (status->messages)
++         {
++           inc->msgcount = status->messages;
++           inc->msg_unread = status->unseen;
++         }
++ 
+          FREE (&value);
+          return;
+        }

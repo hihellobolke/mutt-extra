@@ -1,0 +1,38 @@
+***************
+*** 23,30 ****
+  .SH SYNOPSIS
+  .PP
+  .B mutt
+- [\-nRyzZ]
+- [\-e \fIcmd\fP] [\-F \fIfile\fP] [\-m \fItype\fP] [\-f \fIfile\fP]
+  .PP
+  .B mutt 
+  [\-nx] 
+--- 23,30 ----
+  .SH SYNOPSIS
+  .PP
+  .B mutt
++ [\-GnRyzZ]
++ [\-e \fIcmd\fP] [\-F \fIfile\fP] [\-g \fIserver\fP] [\-m \fItype\fP] [\-f \fIfile\fP]
+  .PP
+  .B mutt 
+  [\-nx] 
+***************
+*** 101,106 ****
+  Specify which mailbox to load.
+  .IP "-F \fImuttrc\fP"
+  Specify an initialization file to read instead of ~/.muttrc
+  .IP "-h"
+  Display help.
+  .IP "-H \fIdraft\fP"
+--- 101,110 ----
+  Specify which mailbox to load.
+  .IP "-F \fImuttrc\fP"
+  Specify an initialization file to read instead of ~/.muttrc
++ .IP "-g \fIserver\fP"
++ Start Mutt with a listing of subscribed newsgroups at specified news server.
++ .IP "-G"
++ Start Mutt with a listing of subscribed newsgroups.
+  .IP "-h"
+  Display help.
+  .IP "-H \fIdraft\fP"

@@ -253,7 +253,7 @@
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
 
-/* Define to 1 if the system has the type 'long long int'. */
+/* Define to 1 if the system has the type `long long int'. */
 #undef HAVE_LONG_LONG_INT
 
 /* Define to 1 if you have the <malloc.h> header file. */
@@ -427,7 +427,7 @@
 /* Define to 1 if you have the <unix.h> header file. */
 #undef HAVE_UNIX_H
 
-/* Define to 1 if the system has the type 'unsigned long long int'. */
+/* Define to 1 if the system has the type `unsigned long long int'. */
 #undef HAVE_UNSIGNED_LONG_LONG_INT
 
 /* Define if you have use_default_colors, as a function or macro. */
@@ -553,6 +553,9 @@
 /* Define to enable Sun mailtool attachments support. */
 #undef SUN_ATTACHMENT
 
+/* Define to support compressed folders. */
+#undef USE_COMPRESSED
+
 /* Define to use dotlocking for mailboxes. */
 #undef USE_DOTLOCK
 
@@ -573,6 +576,9 @@
 
 /* Define if you want support for the IMAP protocol. */
 #undef USE_IMAP
+
+/* Define if you want support for the NNTP protocol. */
+#undef USE_NNTP
 
 /* Define if you want support for the POP3 protocol. */
 #undef USE_POP

@@ -1,0 +1,17 @@
+***************
+*** 47,52 ****
+  mutt_tunnel.c
+  muttlib.c
+  mx.c
+  pager.c
+  parse.c
+  pattern.c
+--- 47,54 ----
+  mutt_tunnel.c
+  muttlib.c
+  mx.c
++ newsrc.c
++ nntp.c
+  pager.c
+  parse.c
+  pattern.c

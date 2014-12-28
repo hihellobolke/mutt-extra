@@ -1,0 +1,42 @@
+***************
+*** 106,114 ****
+  
+  check:
+  manual.txt: manual.html
+- 	-LC_ALL=C lynx -dump -nolist -with_backspaces -display_charset=us-ascii manual.html > $@ || \
+- 	LC_ALL=C w3m -dump manual.html > $@ || \
+- 	LC_ALL=C elinks -dump -no-numbering -no-references manual.html | sed -e 's,\\001, ,g' > $@
+  
+  Muttrc: stamp-doc-rc
+  
+--- 106,112 ----
+  
+  check:
+  manual.txt: manual.html
++ 	LC_ALL=C w3m -dump -O UTF-8 manual.html > $@
+  
+  Muttrc: stamp-doc-rc
+  
+***************
+*** 120,129 ****
+  	touch stamp-doc-rc
+  
+  manual.html: $(srcdir)/html.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+- 	-xsltproc --nonet -o $@ $(srcdir)/html.xsl manual.xml
+  
+  stamp-doc-chunked: $(srcdir)/chunk.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
+- 	-xsltproc --nonet $(srcdir)/chunk.xsl manual.xml
+  	touch stamp-doc-chunked
+  
+  $(CHUNKED_DOCFILES): stamp-doc-chunked
+--- 118,127 ----
+  	touch stamp-doc-rc
+  
+  manual.html: $(srcdir)/html.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
++ 	xsltproc --nonet -o $@ $(srcdir)/html.xsl manual.xml
+  
+  stamp-doc-chunked: $(srcdir)/chunk.xsl $(srcdir)/mutt.xsl stamp-doc-xml $(srcdir)/mutt.css
++ 	xsltproc --nonet $(srcdir)/chunk.xsl manual.xml
+  	touch stamp-doc-chunked
+  
+  $(CHUNKED_DOCFILES): stamp-doc-chunked

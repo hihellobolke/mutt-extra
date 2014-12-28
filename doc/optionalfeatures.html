@@ -57,7 +57,7 @@ encrypted communication using SSL or TLS.
 Since all protocols supported by Mutt support/require authentication,
 login credentials may be specified in the URL. This has the advantage
 that multiple IMAP, POP3 or SMTP servers may be specified (which isn't
-possible using, for example, <a class="link" href="reference.html#imap-user" title="3.109. imap_user">$imap_user</a>). The username may contain the
+possible using, for example, <a class="link" href="reference.html#imap-user" title="3.107. imap_user">$imap_user</a>). The username may contain the
 <span class="quote">“<span class="quote">@</span>”</span> symbol being used by many mail systems as part of the
 login name. The special characters <span class="quote">“<span class="quote">/</span>”</span>
 (<code class="literal">%2F</code>), <span class="quote">“<span class="quote">:</span>”</span> (<code class="literal">%3A</code>) and
@@ -97,7 +97,7 @@ Remote POP3 servers can be accessed using URLs with the
 </p><p>
 Polling for new mail is more expensive over POP3 than locally. For this
 reason the frequency at which Mutt will check for mail remotely can be
-controlled by the <a class="link" href="reference.html#pop-checkinterval" title="3.188. pop_checkinterval">$pop_checkinterval</a> variable, which
+controlled by the <a class="link" href="reference.html#pop-checkinterval" title="3.190. pop_checkinterval">$pop_checkinterval</a> variable, which
 defaults to every 60 seconds.
 </p><p>
 POP is read-only which doesn't allow for some features like editing
@@ -109,8 +109,8 @@ the POP server (either by Mutt or other tools).
 </p><a id="fetch-mail"></a><p>
 Another way to access your POP3 mail is the
 <code class="literal">&lt;fetch-mail&gt;</code> function (default: G).  It allows
-to connect to <a class="link" href="reference.html#pop-host" title="3.190. pop_host">$pop_host</a>, fetch all your
-new mail and place it in the local <a class="link" href="reference.html#spoolfile" title="3.272. spoolfile">$spoolfile</a>.  After this point, Mutt runs
+to connect to <a class="link" href="reference.html#pop-host" title="3.192. pop_host">$pop_host</a>, fetch all your
+new mail and place it in the local <a class="link" href="reference.html#spoolfile" title="3.276. spoolfile">$spoolfile</a>.  After this point, Mutt runs
 exactly as if the mail had always been local.
 </p><div class="note"><h3 class="title">Note</h3><p>
 If you only need to fetch all messages to a local mailbox you should
@@ -135,10 +135,10 @@ by the server and convert paths accordingly.
 </p><p>
 When browsing folders on an IMAP server, you can toggle whether to look
 at only the folders you are subscribed to, or all folders with the
-<span class="emphasis"><em>toggle-subscribed</em></span> command.  See also the <a class="link" href="reference.html#imap-list-subscribed" title="3.102. imap_list_subscribed">$imap_list_subscribed</a> variable.
+<span class="emphasis"><em>toggle-subscribed</em></span> command.  See also the <a class="link" href="reference.html#imap-list-subscribed" title="3.100. imap_list_subscribed">$imap_list_subscribed</a> variable.
 </p><p>
 Polling for new mail on an IMAP server can cause noticeable delays. So,
-you'll want to carefully tune the <a class="link" href="reference.html#mail-check" title="3.118. mail_check">$mail_check</a> and <a class="link" href="reference.html#timeout" title="3.296. timeout">$timeout</a> variables. Reasonable values are:
+you'll want to carefully tune the <a class="link" href="reference.html#mail-check" title="3.116. mail_check">$mail_check</a> and <a class="link" href="reference.html#timeout" title="3.298. timeout">$timeout</a> variables. Reasonable values are:
 </p><pre class="screen">
 set mail_check=90
 set timeout=15
@@ -197,16 +197,16 @@ LOGIN.
 </p><p>
 There are a few variables which control authentication:
 </p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>
-<a class="link" href="reference.html#imap-user" title="3.109. imap_user">$imap_user</a> - controls the username
+<a class="link" href="reference.html#imap-user" title="3.107. imap_user">$imap_user</a> - controls the username
 under which you request authentication on the IMAP server, for all
 authenticators. This is overridden by an explicit username in the
 mailbox path (i.e. by using a mailbox name of the form
 <code class="literal">{user@host}</code>).
 </p></li><li class="listitem"><p>
-<a class="link" href="reference.html#imap-pass" title="3.104. imap_pass">$imap_pass</a> - a password which you may
+<a class="link" href="reference.html#imap-pass" title="3.102. imap_pass">$imap_pass</a> - a password which you may
 preset, used by all authentication methods where a password is needed.
 </p></li><li class="listitem"><p>
-<a class="link" href="reference.html#imap-authenticators" title="3.96. imap_authenticators">$imap_authenticators</a> - a
+<a class="link" href="reference.html#imap-authenticators" title="3.94. imap_authenticators">$imap_authenticators</a> - a
 colon-delimited list of IMAP authentication methods to try, in the order
 you wish to try them. If specified, this overrides Mutt's default
 (attempt everything, in the order listed above).
@@ -215,16 +215,16 @@ Besides supporting traditional mail delivery through a
 sendmail-compatible program, Mutt supports delivery through SMTP if it
 was configured and built with <code class="literal">--enable-smtp</code>.
 </p><p>
-If the configuration variable <a class="link" href="reference.html#smtp-url" title="3.265. smtp_url">$smtp_url</a>
+If the configuration variable <a class="link" href="reference.html#smtp-url" title="3.269. smtp_url">$smtp_url</a>
 is set, Mutt will contact the given SMTP server to deliver messages; if
-it is unset, Mutt will use the program specified by <a class="link" href="reference.html#sendmail" title="3.233. sendmail">$sendmail</a>.
+it is unset, Mutt will use the program specified by <a class="link" href="reference.html#sendmail" title="3.235. sendmail">$sendmail</a>.
 </p><p>
 For details on the URL syntax, please see <a class="xref" href="optionalfeatures.html#url-syntax" title="1.2. URL Syntax">Section 1.2, “URL Syntax”</a>.
 </p><p>
 The built-in SMTP support supports encryption (the
 <code class="literal">smtps</code> protocol using SSL or TLS) as well as SMTP
 authentication using SASL. The authentication mechanisms for SASL are
-specified in <a class="link" href="reference.html#smtp-authenticators" title="3.263. smtp_authenticators">$smtp_authenticators</a> defaulting to
+specified in <a class="link" href="reference.html#smtp-authenticators" title="3.267. smtp_authenticators">$smtp_authenticators</a> defaulting to
 an empty list which makes Mutt try all available methods from
 most-secure to least-secure.
 </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="account-hook"></a>6. Managing Multiple Accounts</h2></div></div></div><p>
@@ -254,7 +254,7 @@ account-hook imap://host1/ 'set imap_user=me1 imap_pass=foo'
 account-hook imap://host2/ 'set tunnel="ssh host2 /usr/libexec/imapd"'
 account-hook smtp://user@host3/ 'set tunnel="ssh host3 /usr/libexec/smtpd"'
 </pre><p>
-To manage multiple accounts with, for example, different values of <a class="link" href="reference.html#record" title="3.212. record">$record</a> or sender addresses, <a class="link" href="configuration.html#folder-hook" title="7. Setting Variables Based Upon Mailbox"><span class="command"><strong>folder-hook</strong></span></a> has to be be
+To manage multiple accounts with, for example, different values of <a class="link" href="reference.html#record" title="3.214. record">$record</a> or sender addresses, <a class="link" href="configuration.html#folder-hook" title="7. Setting Variables Based Upon Mailbox"><span class="command"><strong>folder-hook</strong></span></a> has to be be
 used together with the <a class="link" href="configuration.html#mailboxes" title="14. Monitoring Incoming Mail"><span class="command"><strong>mailboxes</strong></span></a> command.
 </p><div class="example"><a id="ex-multiaccount"></a><p class="title"><strong>Example 6.2. Managing multiple accounts</strong></p><div class="example-contents"><pre class="screen">
 mailboxes imap://user@host1/INBOX
@@ -266,14 +266,14 @@ folder-hook imap://user@host2/ 'set folder=imap://host2/ ; set record=+INBOX/Sen
 In example <a class="xref" href="optionalfeatures.html#ex-multiaccount" title="Example 6.2. Managing multiple accounts">Example 6.2, “Managing multiple accounts”</a> the folders are defined
 using <a class="link" href="configuration.html#mailboxes" title="14. Monitoring Incoming Mail"><span class="command"><strong>mailboxes</strong></span></a> so
 Mutt polls them for new mail. Each <a class="link" href="configuration.html#folder-hook" title="7. Setting Variables Based Upon Mailbox"><span class="command"><strong>folder-hook</strong></span></a> triggers
-when one mailbox below each IMAP account is opened and sets <a class="link" href="reference.html#folder" title="3.66. folder">$folder</a> to the account's root folder. Next, it
-sets <a class="link" href="reference.html#record" title="3.212. record">$record</a> to the
-<span class="emphasis"><em>INBOX/Sent</em></span> folder below the newly set <a class="link" href="reference.html#folder" title="3.66. folder">$folder</a>. Please notice that the value the
+when one mailbox below each IMAP account is opened and sets <a class="link" href="reference.html#folder" title="3.65. folder">$folder</a> to the account's root folder. Next, it
+sets <a class="link" href="reference.html#record" title="3.214. record">$record</a> to the
+<span class="emphasis"><em>INBOX/Sent</em></span> folder below the newly set <a class="link" href="reference.html#folder" title="3.65. folder">$folder</a>. Please notice that the value the
 <span class="quote">“<span class="quote">+</span>”</span> <a class="link" href="advancedusage.html#shortcuts" title="8. Mailbox Shortcuts">mailbox shortcut</a>
-refers to depends on the <span class="emphasis"><em>current</em></span> value of <a class="link" href="reference.html#folder" title="3.66. folder">$folder</a> and therefore has to be set separately
-per account. Setting other values like <a class="link" href="reference.html#from" title="3.75. from">$from</a>
-or <a class="link" href="reference.html#signature" title="3.238. signature">$signature</a> is analogous to setting
-<a class="link" href="reference.html#record" title="3.212. record">$record</a>.
+refers to depends on the <span class="emphasis"><em>current</em></span> value of <a class="link" href="reference.html#folder" title="3.65. folder">$folder</a> and therefore has to be set separately
+per account. Setting other values like <a class="link" href="reference.html#from" title="3.74. from">$from</a>
+or <a class="link" href="reference.html#signature" title="3.240. signature">$signature</a> is analogous to setting
+<a class="link" href="reference.html#record" title="3.214. record">$record</a>.
 </p></div><div class="sect1"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="caching"></a>7. Local Caching</h2></div></div></div><p>
 Mutt contains two types of local caching: <span class="emphasis"><em>(1)</em></span> the
 so-called <span class="quote">“<span class="quote">header caching</span>”</span> and <span class="emphasis"><em>(2)</em></span> the
@@ -297,7 +297,7 @@ Header caching can be enabled via the configure script and the
 default because external database libraries are required: one of
 tokyocabinet, qdbm, gdbm or bdb must be present.
 </p><p>
-If enabled, <a class="link" href="reference.html#header-cache" title="3.79. header_cache">$header_cache</a> can be
+If enabled, <a class="link" href="reference.html#header-cache" title="3.78. header_cache">$header_cache</a> can be
 used to either point to a file or a directory. If set to point to a
 file, one database file for all folders will be used (which may result
 in lower performance), but one file per folder if it points to a
@@ -311,11 +311,11 @@ In addition to caching message headers only, Mutt can also cache whole
 message bodies. This results in faster display of messages for POP and
 IMAP folders because messages usually have to be downloaded only once.
 </p><p>
-For configuration, the variable <a class="link" href="reference.html#message-cachedir" title="3.133. message_cachedir">$message_cachedir</a> must point to a directory. There, Mutt will
+For configuration, the variable <a class="link" href="reference.html#message-cachedir" title="3.131. message_cachedir">$message_cachedir</a> must point to a directory. There, Mutt will
 create a hierarchy of subdirectories named like the account and mailbox
 path the cache is for.
 </p></div><div class="sect2"><div class="titlepage"><div><div><h3 class="title"><a id="cache-dirs"></a>7.3. Cache Directories</h3></div></div></div><p>
-For using both, header and body caching, <a class="link" href="reference.html#header-cache" title="3.79. header_cache">$header_cache</a> and <a class="link" href="reference.html#message-cachedir" title="3.133. message_cachedir">$message_cachedir</a> can be safely set
+For using both, header and body caching, <a class="link" href="reference.html#header-cache" title="3.78. header_cache">$header_cache</a> and <a class="link" href="reference.html#message-cachedir" title="3.131. message_cachedir">$message_cachedir</a> can be safely set
 to the same value.
 </p><p>
 In a header or body cache directory, Mutt creates a directory hierarchy
@@ -336,7 +336,7 @@ big. It depends on the database library used for header caching whether
 disk space freed by removing messages is re-used.
 </p><p>
 For body caches, Mutt can keep the local cache in sync with the remote
-mailbox if the <a class="link" href="reference.html#message-cache-clean" title="3.132. message_cache_clean">$message_cache_clean</a> variable is
+mailbox if the <a class="link" href="reference.html#message-cache-clean" title="3.130. message_cache_clean">$message_cache_clean</a> variable is
 set. Cleaning means to remove messages from the cache which are no
 longer present in the mailbox which only happens when other mail clients
 or instances of Mutt using a different body cache location delete
@@ -380,7 +380,7 @@ changes, leave the menu, or <code class="literal">&lt;accept&gt;</code> them
 pressing (by default) the <code class="literal">Return</code> key.
 </p><p>
 Note that different remailers do have different capabilities, indicated
-in the %c entry of the remailer menu lines (see <a class="link" href="reference.html#mix-entry-format" title="3.144. mix_entry_format">$mix_entry_format</a>).  Most important is
+in the %c entry of the remailer menu lines (see <a class="link" href="">$mix_entry_format</a>).  Most important is
 the <span class="quote">“<span class="quote">middleman</span>”</span> capability, indicated by a capital
 <span class="quote">“<span class="quote">M</span>”</span>: This means that the remailer in question cannot be
 used as the final element of a chain, but will only forward messages to

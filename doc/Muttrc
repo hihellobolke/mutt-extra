@@ -12,6 +12,34 @@ unignore from: subject to cc date x-mailer x-url user-agent
 # Display the fields in this order
 hdr_order date from to cc subject
 
+# emacs-like bindings
+bind editor    "\e<delete>"    kill-word
+bind editor    "\e<backspace>" kill-word
+
+# map delete-char to a sane value
+bind editor     <delete>  delete-char
+
+# some people actually like these settings
+#set pager_stop
+#bind pager <up> previous-line
+#bind pager <down> next-line
+
+# Specifies how to sort messages in the index menu.
+set sort=threads
+
+# The behavior of this option on the Debian mutt package is
+# not the original one because exim4, the default SMTP on Debian
+# does not strip bcc headers so this can cause privacy problems;
+# see man muttrc for more info
+#unset write_bcc
+# Postfix and qmail use Delivered-To for detecting loops
+unset bounce_delivered
+
+set mixmaster="mixmaster-filter"
+
+# System-wide CA file managed by the ca-certificates package
+set ssl_ca_certificates_file="/etc/ssl/certs/ca-certificates.crt"
+
 # imitate the old search-body function
 macro index \eb "<search>~b " "search in message bodies"
 
@@ -23,14 +51,14 @@ macro index,pager,attach,compose \cb "\
 "call urlview to extract URLs out of a message"
 
 # Show documentation when pressing F1
-macro generic,pager <F1> "<shell-escape> less /usr/local/share/doc/mutt/manual.txt<Enter>" "show Mutt documentation"
+macro generic,pager <F1> "<shell-escape> zcat /Volumes/home/epiclulz/local/share/doc/mutt/mutt/manual.txt.gz | sensible-pager<enter>" "show Mutt documentation"
 
 # show the incoming mailboxes list (just like "mutt -y") and back when pressing "y"
 macro index,pager y "<change-folder>?<toggle-mailboxes>" "show incoming mailboxes list"
 bind browser y exit
 
 # If Mutt is unable to determine your site's domain name correctly, you can
-# set the default here.
+# set the default here. (better: fix /etc/mailname)
 #
 # set hostname=cs.hmc.edu
 
@@ -41,6 +69,10 @@ bind browser y exit
 # Use mime.types to look up handlers for application/octet-stream. Can
 # be undone with unmime_lookup.
 mime_lookup application/octet-stream
+
+# Upgrade the progress counter every 250ms, good for mutt over SSH
+# see http://bugs.debian.org/537746
+set time_inc=250
 
 ##
 ## *** DEFAULT SETTINGS FOR THE ATTACHMENTS PATCH ***
@@ -240,28 +272,6 @@ attachments   -I message/external-body
 # editing the body of an outgoing message.
 # 
 # 
-# set ask_follow_up=no
-#
-# Name: ask_follow_up
-# Type: boolean
-# Default: no
-# 
-# 
-# If set, Mutt will prompt you for follow-up groups before editing
-# the body of an outgoing message.
-# 
-# 
-# set ask_x_comment_to=no
-#
-# Name: ask_x_comment_to
-# Type: boolean
-# Default: no
-# 
-# 
-# If set, Mutt will prompt you for x-comment-to field before editing
-# the body of an outgoing message.
-# 
-# 
 # set assumed_charset=""
 #
 # Name: assumed_charset
@@ -452,6 +462,9 @@ attachments   -I message/external-body
 # When this variable is set, mutt will include Delivered-To headers when
 # bouncing messages.  Postfix users may wish to unset this variable.
 # 
+# Note: On Debian systems, this option is unset by default in
+# /etc/Muttrc.
+# 
 # 
 # set braille_friendly=no
 #
@@ -465,17 +478,6 @@ attachments   -I message/external-body
 # is unset, making it easier for blind persons using Braille displays to
 # follow these menus.  The option is unset by default because many
 # visual terminals don't permit making the cursor invisible.
-# 
-# 
-# set catchup_newsgroup=ask-yes
-#
-# Name: catchup_newsgroup
-# Type: quadoption
-# Default: ask-yes
-# 
-# 
-# If this variable is set, Mutt will mark all articles in newsgroup
-# as read when you quit the newsgroup (catchup newsgroup).
 # 
 # 
 # set certificate_file="~/.mutt_certificates"
@@ -903,17 +905,6 @@ attachments   -I message/external-body
 # filtered message is read from the standard output.
 # 
 # 
-# set dotlock_program="/usr/local/bin/mutt_dotlock"
-#
-# Name: dotlock_program
-# Type: path
-# Default: "/usr/local/bin/mutt_dotlock"
-# 
-# 
-# Contains the path of the mutt_dotlock(8) binary to be used by
-# mutt.
-# 
-# 
 # set dsn_notify=""
 #
 # Name: dsn_notify
@@ -995,7 +986,7 @@ attachments   -I message/external-body
 # 
 # This variable specifies which editor is used by mutt.
 # It defaults to the value of the $VISUAL, or $EDITOR, environment
-# variable, or to the string ``vi'' if neither of those are set.
+# variable, or to the string ``/usr/bin/editor'' if neither of those are set.
 # 
 # The $editor string may contain a %s escape, which will be replaced by the name
 # of the file to be edited.  If the %s escape does not appear in $editor, a
@@ -1164,19 +1155,6 @@ attachments   -I message/external-body
 # of the same email for you.
 # 
 # 
-# set followup_to_poster=ask-yes
-#
-# Name: followup_to_poster
-# Type: quadoption
-# Default: ask-yes
-# 
-# 
-# If this variable is set and the keyword "poster" is present in
-# Followup-To header, follow-up to newsgroup function is not
-# permitted.  The message will be mailed to the submitter of the
-# message via mail.
-# 
-# 
 # set force_name=no
 #
 # Name: force_name
@@ -1287,27 +1265,6 @@ attachments   -I message/external-body
 # ``Franklin'' to ``Franklin, Steve''.
 # 
 # 
-# set group_index_format="%4C %M%N %5s  %-45.45f %d"
-#
-# Name: group_index_format
-# Type: string
-# Default: "%4C %M%N %5s  %-45.45f %d"
-# 
-# 
-# This variable allows you to customize the newsgroup browser display to
-# your personal taste.  This string is similar to ``index_format'', but
-# has its own set of printf()-like sequences:
-# %C      current newsgroup number
-# %d      description of newsgroup (becomes from server)
-# %f      newsgroup name
-# %M      - if newsgroup not allowed for direct post (moderated for example)
-# %N      N if newsgroup is new, u if unsubscribed, blank otherwise
-# %n      number of new articles in newsgroup
-# %s      number of unread articles in newsgroup
-# %>X     right justify the rest of the string and pad with character "X"
-# %|X     pad to the end of the line with character "X"
-# 
-# 
 # set hdrs=yes
 #
 # Name: hdrs
@@ -1363,19 +1320,6 @@ attachments   -I message/external-body
 # of the usual diskspace, but the decompression can result in a
 # slower opening of cached folder(s) which in general is still
 # much faster than opening non header cached folders.
-# 
-# 
-# set header_cache_pagesize="16384"
-#
-# Name: header_cache_pagesize
-# Type: string
-# Default: "16384"
-# 
-# 
-# When mutt is compiled with either gdbm or bdb4 as the header cache backend,
-# this option changes the database page size.  Too large or too small
-# values can waste space, memory, or CPU time. The default should be more
-# or less optimal for most use cases.
 # 
 # 
 # set help=yes
@@ -1536,6 +1480,9 @@ attachments   -I message/external-body
 # one is not used.
 # 
 # Also see $use_domain and $hidden_host.
+# 
+# Note: On Debian systems, the default for this variable is obtained
+# from /etc/mailname when Mutt starts.
 # 
 # 
 # set ignore_linear_white_space=no
@@ -1786,7 +1733,9 @@ attachments   -I message/external-body
 # ``copiousoutput'' flag set for every MIME attachment it doesn't have
 # an internal viewer defined for.  If such an entry is found, mutt will
 # use the viewer defined in that entry to convert the body part to text
-# form.
+# form. MIME attachments with 'text' types, with the only exception
+# of text/html, are excluded: they will be shown as they are unless auto_view
+# is specified.
 # 
 # 
 # set include=ask-yes
@@ -1913,27 +1862,6 @@ attachments   -I message/external-body
 # 
 # Note that these expandos are supported in
 # ``save-hook'', ``fcc-hook'' and ``fcc-save-hook'', too.
-# 
-# 
-# set inews=""
-#
-# Name: inews
-# Type: path
-# Default: ""
-# 
-# 
-# If set, specifies the program and arguments used to deliver news posted
-# by Mutt.  Otherwise, mutt posts article using current connection to
-# news server.  The following printf-style sequence is understood:
-# %a      account url
-# %p      port
-# %P      port if specified
-# %s      news server name
-# %S      url schema
-# %u      username
-# 
-# 
-# Example: set inews="/usr/local/bin/inews -hS"
 # 
 # 
 # set ispell="ispell"
@@ -2305,47 +2233,6 @@ attachments   -I message/external-body
 # be attached to the newly composed message if this option is set.
 # 
 # 
-# set mime_subject=yes
-#
-# Name: mime_subject
-# Type: boolean
-# Default: yes
-# 
-# 
-# If unset, 8-bit ``subject:'' line in article header will not be
-# encoded according to RFC2047 to base64.  This is useful when message
-# is Usenet article, because MIME for news is nonstandard feature.
-# 
-# 
-# set mix_entry_format="%4n %c %-16s %a"
-#
-# Name: mix_entry_format
-# Type: string
-# Default: "%4n %c %-16s %a"
-# 
-# 
-# This variable describes the format of a remailer line on the mixmaster
-# chain selection screen.  The following printf(3)-like sequences are
-# supported:
-# %n      The running number on the menu.
-# %c      Remailer capabilities.
-# %s      The remailer's short name.
-# %a      The remailer's e-mail address.
-# 
-# 
-# set mixmaster="mixmaster"
-#
-# Name: mixmaster
-# Type: path
-# Default: "mixmaster"
-# 
-# 
-# This variable contains the path to the Mixmaster binary on your
-# system.  It is used with various sets of parameters to gather the
-# list of known remailers, and to finally send a message through the
-# mixmaster chain.
-# 
-# 
 # set move=no
 #
 # Name: move
@@ -2381,144 +2268,6 @@ attachments   -I message/external-body
 # If set to 0, no progress messages will be displayed.
 # 
 # See also $read_inc, $write_inc and $net_inc.
-# 
-# 
-# set news_cache_dir="~/.mutt"
-#
-# Name: news_cache_dir
-# Type: path
-# Default: "~/.mutt"
-# 
-# 
-# This variable pointing to directory where Mutt will save cached news
-# articles and headers in. If unset, articles and headers will not be
-# saved at all and will be reloaded from the server each time.
-# 
-# 
-# set news_server=""
-#
-# Name: news_server
-# Type: string
-# Default: ""
-# 
-# 
-# This variable specifies domain name or address of NNTP server. It
-# defaults to the news server specified in the environment variable
-# $NNTPSERVER or contained in the file /etc/nntpserver.  You can also
-# specify username and an alternative port for each news server, ie:
-# 
-# [[s]news://][username[:password]@]server[:port]
-# 
-# 
-# set newsgroups_charset="utf-8"
-#
-# Name: newsgroups_charset
-# Type: string
-# Default: "utf-8"
-# 
-# 
-# Character set of newsgroups descriptions.
-# 
-# 
-# set newsrc="~/.newsrc"
-#
-# Name: newsrc
-# Type: path
-# Default: "~/.newsrc"
-# 
-# 
-# The file, containing info about subscribed newsgroups - names and
-# indexes of read articles.  The following printf-style sequence
-# is understood:
-# %a      account url
-# %p      port
-# %P      port if specified
-# %s      news server name
-# %S      url schema
-# %u      username
-# 
-# 
-# set nntp_authenticators=""
-#
-# Name: nntp_authenticators
-# Type: string
-# Default: ""
-# 
-# 
-# This is a colon-delimited list of authentication methods mutt may
-# attempt to use to log in to a news server, in the order mutt should
-# try them.  Authentication methods are either ``user'' or any
-# SASL mechanism, e.g. ``digest-md5'', ``gssapi'' or ``cram-md5''.
-# This option is case-insensitive.  If it's unset (the default)
-# mutt will try all available methods, in order from most-secure to
-# least-secure.
-# 
-# Example:
-# set nntp_authenticators="digest-md5:user"
-# 
-# Note: Mutt will only fall back to other authentication methods if
-# the previous methods are unavailable. If a method is available but
-# authentication fails, mutt will not connect to the IMAP server.
-# 
-# 
-# set nntp_context=1000
-#
-# Name: nntp_context
-# Type: number
-# Default: 1000
-# 
-# 
-# This variable defines number of articles which will be in index when
-# newsgroup entered.  If active newsgroup have more articles than this
-# number, oldest articles will be ignored.  Also controls how many
-# articles headers will be saved in cache when you quit newsgroup.
-# 
-# 
-# set nntp_load_description=yes
-#
-# Name: nntp_load_description
-# Type: boolean
-# Default: yes
-# 
-# 
-# This variable controls whether or not descriptions for each newsgroup
-# must be loaded when newsgroup is added to list (first time list
-# loading or new newsgroup adding).
-# 
-# 
-# set nntp_user=""
-#
-# Name: nntp_user
-# Type: string
-# Default: ""
-# 
-# 
-# Your login name on the NNTP server.  If unset and NNTP server requires
-# authentification, Mutt will prompt you for your account name when you
-# connect to news server.
-# 
-# 
-# set nntp_pass=""
-#
-# Name: nntp_pass
-# Type: string
-# Default: ""
-# 
-# 
-# Your password for NNTP account.
-# 
-# 
-# set nntp_poll=60
-#
-# Name: nntp_poll
-# Type: number
-# Default: 60
-# 
-# 
-# The time in seconds until any operations on newsgroup except post new
-# article will cause recheck for new news.  If set to 0, Mutt will
-# recheck newsgroup on each operation in index (stepping, read article,
-# etc.).
 # 
 # 
 # set pager="builtin"
@@ -3029,6 +2778,70 @@ attachments   -I message/external-body
 # (PGP only)
 # 
 # 
+# set sidebar_delim="|"
+#
+# Name: sidebar_delim
+# Type: string
+# Default: "|"
+# 
+# 
+# This specifies the delimiter between the sidebar (if visible) and 
+# other screens.
+# 
+# 
+# set sidebar_visible=no
+#
+# Name: sidebar_visible
+# Type: boolean
+# Default: no
+# 
+# 
+# This specifies whether or not to show sidebar (left-side list of folders).
+# 
+# 
+# set sidebar_sort=no
+#
+# Name: sidebar_sort
+# Type: boolean
+# Default: no
+# 
+# 
+# This specifies whether or not to sort the sidebar alphabetically.
+# 
+# 
+# set sidebar_width=0
+#
+# Name: sidebar_width
+# Type: number
+# Default: 0
+# 
+# 
+# The width of the sidebar.
+# 
+# 
+# set sidebar_delim_chars="/."
+#
+# Name: sidebar_delim_chars
+# Type: string
+# Default: "/."
+# 
+# 
+# This contains the list of characters which you would like to treat
+# as folder separators for displaying paths in the sidebar.  If
+# you're not using IMAP folders, you probably prefer setting this to "/"
+# alone.
+# 
+# 
+# set sidebar_newmail_only=no
+#
+# Name: sidebar_newmail_only
+# Type: boolean
+# Default: no
+# 
+# 
+# Show only new mail in the sidebar.
+# 
+# 
 # set pgp_use_gpg_agent=no
 #
 # Name: pgp_use_gpg_agent
@@ -3236,19 +3049,6 @@ attachments   -I message/external-body
 # 
 # Similar to the $attribution variable, Mutt will append this
 # string after the inclusion of a message which is being replied to.
-# 
-# 
-# set post_moderated=ask-yes
-#
-# Name: post_moderated
-# Type: quadoption
-# Default: ask-yes
-# 
-# 
-# If set to yes, Mutt will post article to newsgroup that have
-# not permissions to posting (e.g. moderated).  Note: if news server
-# does not support posting to that newsgroup or totally read-only, that
-# posting will not have an effect.
 # 
 # 
 # set postpone=ask-yes
@@ -3859,41 +3659,6 @@ attachments   -I message/external-body
 # shell from /etc/passwd is used.
 # 
 # 
-# set save_unsubscribed=no
-#
-# Name: save_unsubscribed
-# Type: boolean
-# Default: no
-# 
-# 
-# When set, info about unsubscribed newsgroups will be saved into
-# ``newsrc'' file and into cache.
-# 
-# 
-# set show_new_news=yes
-#
-# Name: show_new_news
-# Type: boolean
-# Default: yes
-# 
-# 
-# If set, news server will be asked for new newsgroups on entering
-# the browser.  Otherwise, it will be done only once for a news server.
-# Also controls whether or not number of new articles of subscribed
-# newsgroups will be then checked.
-# 
-# 
-# set show_only_unread=no
-#
-# Name: show_only_unread
-# Type: boolean
-# Default: no
-# 
-# 
-# If set, only subscribed newsgroups that contain unread articles
-# will be displayed in browser.
-# 
-# 
 # set sig_dashes=yes
 #
 # Name: sig_dashes
@@ -3991,6 +3756,28 @@ attachments   -I message/external-body
 # happens at the beginning of a line.
 # 
 # 
+# set pgp_mime_signature_filename="signature.asc"
+#
+# Name: pgp_mime_signature_filename
+# Type: string
+# Default: "signature.asc"
+# 
+# 
+# This option sets the filename used for signature parts in PGP/MIME
+# signed messages.
+# 
+# 
+# set pgp_mime_signature_description="Digital signature"
+#
+# Name: pgp_mime_signature_description
+# Type: string
+# Default: "Digital signature"
+# 
+# 
+# This option sets the Content-Description used for signature parts in
+# PGP/MIME signed messages.
+# 
+# 
 # set smime_ask_cert_label=yes
 #
 # Name: smime_ask_cert_label
@@ -4014,6 +3801,10 @@ attachments   -I message/external-body
 # This variable contains the name of either a directory, or a file which
 # contains trusted certificates for use with OpenSSL.
 # (S/MIME only)
+# 
+# Note: On Debian systems, this defaults to the first existing file in
+# the following list: ~/.smime/ca-certificates.crt ~/.smime/ca-bundle.crt
+# /etc/ssl/certs/ca-certificates.crt.
 # 
 # 
 # set smime_certificates=""
@@ -4310,6 +4101,9 @@ attachments   -I message/external-body
 # Example:
 # set smtp_authenticators="digest-md5:cram-md5"
 # 
+# Note: On Debian systems, this variable defaults to the example
+# mentioned. This file is managed by the ``ca-certificates'' package.
+# 
 # 
 # set smtp_pass=""
 #
@@ -4366,6 +4160,9 @@ attachments   -I message/external-body
 # 
 # You may optionally use the ``reverse-'' prefix to specify reverse sorting
 # order (example: ``set sort=reverse-date-sent'').
+# 
+# Note: On Debian systems, this option is set by default to
+# ``threads'' in /etc/Muttrc.
 # 
 # 
 # set sort_alias=alias
@@ -4471,21 +4268,6 @@ attachments   -I message/external-body
 # variable $MAIL or $MAILDIR if either is defined.
 # 
 # 
-# set ssl_ca_certificates_file=""
-#
-# Name: ssl_ca_certificates_file
-# Type: path
-# Default: ""
-# 
-# 
-# This variable specifies a file containing trusted CA certificates.
-# Any server certificate that is signed with one of these CA
-# certificates is also automatically accepted.
-# 
-# Example:
-# set ssl_ca_certificates_file=/etc/ssl/certs/ca-certificates.crt
-# 
-# 
 # set ssl_client_cert=""
 #
 # Name: ssl_client_cert
@@ -4509,18 +4291,6 @@ attachments   -I message/external-body
 # negotiate TLS even if the server does not advertise the capability,
 # since it would otherwise have to abort the connection anyway. This
 # option supersedes $ssl_starttls.
-# 
-# 
-# set ssl_min_dh_prime_bits=0
-#
-# Name: ssl_min_dh_prime_bits
-# Type: number
-# Default: 0
-# 
-# 
-# This variable specifies the minimum acceptable prime size (in bits)
-# for use in any Diffie-Hellman key exchange. A value of 0 will use
-# the default from the GNUTLS library.
 # 
 # 
 # set ssl_starttls=yes
@@ -4890,6 +4660,21 @@ attachments   -I message/external-body
 # was sent to a mailing-list you subscribe to.
 # 
 # 
+# set trash=""
+#
+# Name: trash
+# Type: path
+# Default: ""
+# 
+# 
+# If set, this variable specifies the path of the trash folder where the
+# mails marked for deletion will be moved, instead of being irremediably
+# purged.
+# 
+# NOTE: When you delete a message in the trash folder, it is really
+# deleted, so that you have a way to clean the trash.
+# 
+# 
 # set tunnel=""
 #
 # Name: tunnel
@@ -5118,11 +4903,9 @@ attachments   -I message/external-body
 # Default: yes
 # 
 # 
-# Controls whether mutt writes out the ``Bcc:'' header when preparing
-# messages to be sent.  Exim users may wish to unset this. If mutt
-# is set to deliver directly via SMTP (see $smtp_url), this
-# option does nothing: mutt will never write out the ``Bcc:'' header
-# in this case.
+# Controls whether mutt writes out the Bcc header when saving
+# messages to FCC. Bcc headers will never be written to a message
+# when sending it. Note: this behavior is Debian specific.
 # 
 # 
 # set write_inc=10
@@ -5140,14 +4923,38 @@ attachments   -I message/external-body
 # ``tuning'' section of the manual for performance considerations.
 # 
 # 
-# set x_comment_to=no
+# set xterm_icon="M%?n?AIL&ail?"
 #
-# Name: x_comment_to
+# Name: xterm_icon
+# Type: string
+# Default: "M%?n?AIL&ail?"
+# 
+# 
+# Controls the format of the icon title, as long as xterm_set_titles
+# is enabled. This string is identical in formatting to the one used by
+# ``$status_format''.
+# 
+# 
+# set xterm_set_titles=no
+#
+# Name: xterm_set_titles
 # Type: boolean
 # Default: no
 # 
 # 
-# If set, Mutt will add ``X-Comment-To:'' field (that contains full
-# name of original article author) to article that followuped to newsgroup.
+# Controls whether mutt sets the xterm title bar and icon name
+# (as long as you are in an appropriate terminal).
+# 
+# 
+# set xterm_title="Mutt with %?m?%m messages&no messages?%?n? [%n NEW]?"
+#
+# Name: xterm_title
+# Type: string
+# Default: "Mutt with %?m?%m messages&no messages?%?n? [%n NEW]?"
+# 
+# 
+# Controls the format of the title bar of the xterm provided that
+# xterm_set_titles has been set. This string is identical in formatting
+# to the one used by ``$status_format''.
 # 
 # 

@@ -1,0 +1,17 @@
+***************
+*** 1520,1526 ****
+  
+      imap_munge_mbox_name (munged, sizeof (munged), name);
+      snprintf (command, sizeof (command),
+- 	      "STATUS %s (UIDNEXT UIDVALIDITY UNSEEN RECENT)", munged);
+  
+      if (imap_exec (idata, command, IMAP_CMD_QUEUE) < 0)
+      {
+--- 1520,1526 ----
+  
+      imap_munge_mbox_name (munged, sizeof (munged), name);
+      snprintf (command, sizeof (command),
++ 	      "STATUS %s (UIDNEXT UIDVALIDITY UNSEEN RECENT MESSAGES)", munged);
+  
+      if (imap_exec (idata, command, IMAP_CMD_QUEUE) < 0)
+      {

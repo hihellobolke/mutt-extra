@@ -1,0 +1,14 @@
+***************
+*** 72,75 ****
+  
+  int imap_account_match (const ACCOUNT* a1, const ACCOUNT* a2);
+  
+  #endif
+--- 72,78 ----
+  
+  int imap_account_match (const ACCOUNT* a1, const ACCOUNT* a2);
+  
++ /* trash */
++ int imap_fast_trash();
++ 
+  #endif

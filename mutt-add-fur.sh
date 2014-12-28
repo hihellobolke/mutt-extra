@@ -95,6 +95,7 @@ sayinfo "Apply patches according to pkgbuild"
 (
     cd $MUTT_DIR && \
     sed -n "/patch/s/\${srcdir}/..\/$(basename ${MUTT_PATCH_DIR})/gp" $MUTT_PKGBUILD | xargs -I{} bash -c {} && \
+    autoreconf -vfi && \
     cp -R ./* $MUTT_SRCDIR/ && \
     rm -rf ./* && cd .. && rmdir $MUTT_DIR
 ) || sayerror "Patching failed"
